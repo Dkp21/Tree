@@ -1,6 +1,7 @@
 #include <iostream>
 #include <stack>
 #include <memory>
+#include <climits>
 
 using namespace std;
 
@@ -102,6 +103,11 @@ class Tree
             cout << " ]" << endl;
         }
 
+        bool isBst(void)
+        {
+            return isBstHelper(root, INT_MAX, INT_MIN);
+        }
+
     private:
         TreeNode<T> * root;
 
@@ -140,6 +146,21 @@ class Tree
             postTreeTraversalHelper(root->right);
             cout << root->val << " ";
         }
+
+        bool isBstHelper(TreeNode<T> *root, T max, T min)
+        {
+            if(!root)
+            {
+                return true;
+            }
+
+            if(root->val < min || root->val >= max)
+            {
+                return false;
+            }
+
+            return isBstHelper(root->left, root->val, min) && isBstHelper(root->right, max, root->val);
+        }
 };
 
 int main(int argc, char **argv)
@@ -148,7 +169,7 @@ int main(int argc, char **argv)
 
     unique_ptr<TreeNode<int>> node = unique_ptr<TreeNode<int>>(new TreeNode<int>(10));
     unique_ptr<TreeNode<int>> right = unique_ptr<TreeNode<int>>(new TreeNode<int>(100));
-    unique_ptr<TreeNode<int>> left = unique_ptr<TreeNode<int>>(new TreeNode<int>(30));
+    unique_ptr<TreeNode<int>> left = unique_ptr<TreeNode<int>>(new TreeNode<int>(25));
 
     mytree.insertTreeNode(node.get(), left.get(), right.get());
 
@@ -156,6 +177,8 @@ int main(int argc, char **argv)
     mytree.preorderTreeTraversal();   
     mytree.postTreeTraversal();
     mytree.depthFirstTraversal();
+
+    cout << "isBST() - " << mytree.isBst() << endl;
  
     return 0;
 }
